@@ -1,5 +1,7 @@
 package com.pervasive.unrealdetection;
 
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -11,6 +13,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.material.snackbar.Snackbar;
 import org.opencv.android.OpenCVLoader;
+
+//for image classification
+import com.pervasive.unrealdetection.cnn.CNNExtractorService;
+import com.pervasive.unrealdetection.cnn.impl.CNNExtractorServiceImpl;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
+import org.opencv.dnn.Net;
+import org.opencv.imgproc.Imgproc;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     static {
@@ -27,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView FrontCameraImage;
 
 
+
+
     static {//Necessary to load the OpenCv before the OnCreate, without this it doesn't find openCV files and Mat inizialization crashes
         if (!OpenCVLoader.initDebug()) {
             Log.i("OpenCV", "OpenCV not loaded properly");
@@ -37,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FrameProc = new FrameProcessing(this);
+
+
     }
 
     public void OnButtonForward(View view) {
@@ -49,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                     //Looper.prepare();
                     CarForward();   // in here both forward and steering
                     //Loop();
+                    FrameProc.setIsCarMoving(true);
                     return null;
                 }
             });
@@ -81,17 +102,22 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 if (connection) {
-                    FrameProc.getFramesBitmap();
+                    FrameProc.getFramesBitmap();//obtained Mat from camera.
+
+
 
                     FrontCameraImage = (ImageView) findViewById(R.id.frontCamera);
 
                     if (FrontCameraImage != null) {
                         FrontCameraImage.setImageBitmap(FrameProc.getFrontImgBitmap());
                     }
+
+
                     handler.postDelayed(this, 1);
                 }
             }
 
         }, 1);
     }
+
 }
