@@ -1,0 +1,6 @@
+include ':app'
+rootProject.name = "UnrealDetection"
+
+def opencvsdk='C:\\Development\\OpenCV-android-sdk'
+include ':opencv'
+project(':opencv').projectDir = new File(opencvsdk + '\\sdk')

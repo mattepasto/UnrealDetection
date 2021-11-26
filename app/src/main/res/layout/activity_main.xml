@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              tools:context=".MainActivity"
+              android:orientation="vertical"
+              android:gravity="center"
+              android:id="@+id/activity_main">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/startconnection"
+            android:textSize="24dp"
+            android:id="@+id/textView1"/>
+    <ToggleButton
+            android:id="@+id/connectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_margin="24dp"
+            android:textSize="20dp"
+            android:onClick="OnButtonConnect"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title"
+            android:textSize="24dp"
+            android:id="@+id/textView2"/>
+
+    <Button
+            android:id="@+id/carForward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/key1"
+            android:textSize="20dp"
+            android:onClick="OnButtonForward"/>
+    <Button
+            android:id="@+id/carForward2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/key2"
+            android:textSize="20dp"
+            android:onClick="OnButtonForward"/>
+    <Button
+            android:id="@+id/carForward3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:text="@string/key3"
+            android:textSize="20dp"
+            android:onClick="OnButtonForward"/>
+
+
+</LinearLayout>
