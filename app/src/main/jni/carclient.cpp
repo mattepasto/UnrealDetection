@@ -42,8 +42,8 @@ JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarForwar
     if (!m_client)
         return;
     CarApiBase::CarControls controls;
-    controls.throttle = 2.5f;
-    controls.steering = 2.5f;
+    controls.throttle = 0.3f;
+    controls.steering = 0.5f;
     m_client->setCarControls(controls);
 }
 
@@ -70,7 +70,7 @@ JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_GetImage(
     cv::Mat& front = *(Mat*)FrontImg;
 
     std::vector<ImageRequest> request = {
-            ImageRequest("0", ImageType::Scene, false), // FrontCam??; 0
+            ImageRequest("0", ImageType::Scene, false),
     };
 
     const std::vector<ImageResponse>& response = m_client->simGetImages(request);

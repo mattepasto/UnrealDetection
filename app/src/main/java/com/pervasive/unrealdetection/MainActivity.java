@@ -1,9 +1,6 @@
 package com.pervasive.unrealdetection;
 
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,22 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
 import org.opencv.android.OpenCVLoader;
-
-//for image classification
-import com.pervasive.unrealdetection.cnn.CNNExtractorService;
-import com.pervasive.unrealdetection.cnn.impl.CNNExtractorServiceImpl;
-import org.opencv.core.Mat;
-import org.opencv.core.Point;
-import org.opencv.core.Scalar;
-import org.opencv.dnn.Net;
-import org.opencv.imgproc.Imgproc;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
     static {
@@ -42,10 +24,10 @@ public class MainActivity extends AppCompatActivity {
     private Boolean connection=false;
     private ImageView FrontCameraImage;
 
+    public String objectToDetect;
+    private boolean textInizialization = false;   // initialize text in the car_view layout
 
-
-
-    static {//Necessary to load the OpenCv before the OnCreate, without this it doesn't find openCV files and Mat inizialization crashes
+    static {    //Necessary to load the OpenCv before the OnCreate, without this it doesn't find openCV files and Mat inizialization crashes
         if (!OpenCVLoader.initDebug()) {
             Log.i("OpenCV", "OpenCV not loaded properly");
         }
@@ -55,20 +37,50 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FrameProc = new FrameProcessing(this);
-
-
     }
 
     public void OnButtonForward(View view) {
-        if(connection){//only if the connection with the car is true
+        if(connection){     //only if the connection with the car is true
+            objectToDetect="basketball";
+            setContentView(R.layout.car_view);
+
+            TaskRunner runner = new TaskRunner();
+            runner.executeAsync(new BaseTask() {
+                @Override
+                public Void call() throws Exception {
+                    CarForward();   // in here both forward and steering
+                    FrameProc.setIsCarMoving(true);
+                    return null;
+                }
+            });
+        }
+    }
+
+    public void OnButtonForward2(View view) {
+        if(connection){     //only if the connection with the car is true
+            objectToDetect="monitor";
             setContentView(R.layout.car_view);
             TaskRunner runner = new TaskRunner();
             runner.executeAsync(new BaseTask() {
                 @Override
                 public Void call() throws Exception {
-                    //Looper.prepare();
                     CarForward();   // in here both forward and steering
-                    //Loop();
+                    FrameProc.setIsCarMoving(true);
+                    return null;
+                }
+            });
+        }
+    }
+
+    public void OnButtonForward3(View view) {
+        if(connection){//only if the connection with the car is true
+            objectToDetect="acoustic guitar";
+            setContentView(R.layout.car_view);
+            TaskRunner runner = new TaskRunner();
+            runner.executeAsync(new BaseTask() {
+                @Override
+                public Void call() throws Exception {
+                    CarForward();   // in here both forward and steering
                     FrameProc.setIsCarMoving(true);
                     return null;
                 }
@@ -89,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                         "connection result " + result, Toast.LENGTH_LONG).show();
                 connection=result;
                 Loop();
-
             }
             @Override
             public void preExecute() {
@@ -102,22 +113,26 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 if (connection) {
-                    FrameProc.getFramesBitmap();//obtained Mat from camera.
-
-
-
+                    FrameProc.getFramesBitmap();    //obtained Mat from camera.
                     FrontCameraImage = (ImageView) findViewById(R.id.frontCamera);
 
-                    if (FrontCameraImage != null) {
+                    if (FrontCameraImage != null) {     //it starts when completely loaded
                         FrontCameraImage.setImageBitmap(FrameProc.getFrontImgBitmap());
+                        if(!textInizialization) {
+                            TextView text = (TextView) findViewById(R.id.textView2);
+                            if (text != null) {
+                                text.setText(objectToDetect);
+                                textInizialization=true;
+                            }
+                        }
                     }
-
-
                     handler.postDelayed(this, 1);
                 }
             }
-
         }, 1);
     }
 
+    public String getObjectToDetect(){
+        return objectToDetect;
+    }
 }

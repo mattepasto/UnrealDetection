@@ -19,8 +19,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 
 public class FrameProcessing {
     private static final int w = 256, h = 144;
@@ -32,13 +30,9 @@ public class FrameProcessing {
     private static final String IMAGENET_CLASSES = "imagenet_classes.txt";
     private static final String MODEL_FILE = "pytorch_mobilenet.onnx";
     private static String classesPath;
-    private static Mat frameMat;
     private static boolean isCarMoving=false;
-
-
     private Bitmap FrontImgBitmap;
     private Size size1;
-
 
     public Bitmap getFrontImgBitmap() {
         size1=FrontImgMat.size();
@@ -46,31 +40,19 @@ public class FrameProcessing {
         return FrontImgBitmap;
     }
 
-    public void setIsCarMoving(boolean value){
-        isCarMoving=value;
+    public void setIsCarMoving(boolean value) {
+        isCarMoving = true;
     }
 
-
-
     private Mat FrontImgMat;
-
-
     MainActivity AirSim;
 
     public FrameProcessing(MainActivity ma){
-
-
-
         FrontImgMat = new Mat();
-
         AirSim = ma;
-
         FrontImgBitmap = null;
 
-
-
         //Init bitmap image
-
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = false;
         options.inBitmap = FrontImgBitmap;
@@ -79,7 +61,7 @@ public class FrameProcessing {
 
         //for image classification
         this.cnnService = new CNNExtractorServiceImpl();
-        classesPath = getPath(IMAGENET_CLASSES, ma);//inizialized dictionary of all things from
+        classesPath = getPath(IMAGENET_CLASSES, ma);
         String onnxModelPath = getPath(MODEL_FILE, ma);
         if (onnxModelPath.trim().isEmpty()) {
             Log.i(TAG, "Failed to get model file");
@@ -88,17 +70,19 @@ public class FrameProcessing {
         opencvNet = cnnService.getConvertedNet(onnxModelPath, TAG);
     }
 
-
     public void getFramesBitmap(){
         AirSim.GetImage(FrontImgMat.getNativeObjAddr()); //get frame in Mat
         //Mat is FrontImgMat
         if(isCarMoving) {
             String predictedClass = cnnService.getPredictedLabel(FrontImgMat, opencvNet, classesPath);
             Imgproc.putText(FrontImgMat, predictedClass, new Point(0, 50),
-                    Imgproc.FONT_HERSHEY_SIMPLEX, 0.8, new Scalar(255, 121, 0), 1);
+                    Imgproc.FONT_HERSHEY_SIMPLEX, 0.3, new Scalar(255, 121, 0), 1);
+            Imgproc.cvtColor(FrontImgMat, FrontImgMat, Imgproc.COLOR_BGR2RGB);
+            if(predictedClass.compareTo(AirSim.getObjectToDetect())==0){
+                AirSim.CarStop();
+            }
         }
 
-        //Imgproc.cvtColor(FrontImgMat, FrontImgMat, Imgproc.COLOR_BGR2RGB);
     }
     private static String getPath(String file, Context context) {
         AssetManager assetManager = context.getAssets();

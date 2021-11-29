@@ -45,7 +45,7 @@
             android:layout_margin="20dp"
             android:text="@string/key2"
             android:textSize="20dp"
-            android:onClick="OnButtonForward"/>
+            android:onClick="OnButtonForward2"/>
     <Button
             android:id="@+id/carForward3"
             android:layout_width="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_margin="20dp"
             android:text="@string/key3"
             android:textSize="20dp"
-            android:onClick="OnButtonForward"/>
+            android:onClick="OnButtonForward3"/>
 
 
 </LinearLayout>
