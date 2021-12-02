@@ -2,7 +2,7 @@
     <string name="app_name">UnrealDetection</string>
     <string name="startconnection">Click to start connection with the car:</string>
     <string name="title">Choose the object to detect:</string>
-    <string name="key1">Basket ball</string>
-    <string name="key2">Monitor</string>
-    <string name="key3">Acoustic guitar</string>
+    <string name="key1">basketball</string>
+    <string name="key2">monitor</string>
+    <string name="key3">acoustic guitar</string>
 </resources>

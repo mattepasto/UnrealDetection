@@ -3,6 +3,7 @@ package com.pervasive.unrealdetection;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import org.opencv.android.OpenCVLoader;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     static {
         System.loadLibrary("carclient");
     }
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView FrontCameraImage;
 
     public String objectToDetect;
-    private boolean textInizialization = false;   // initialize text in the car_view layout
+    private boolean textInitialization = false;   // initialize text in the car_view layout
 
     static {    //Necessary to load the OpenCv before the OnCreate, without this it doesn't find openCV files and Mat inizialization crashes
         if (!OpenCVLoader.initDebug()) {
@@ -36,46 +37,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button button1 = findViewById(R.id.button1);
+        Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.button3);
+
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
+
         FrameProc = new FrameProcessing(this);
     }
-
-    public void OnButtonForward(View view) {
-        if(connection){     //only if the connection with the car is true
-            objectToDetect="basketball";
+    @Override
+    public void onClick(View view) {
+        if(connection){     //  only if the connection with the car is true
+            int clickedId = view.getId();
+            Button button = findViewById(clickedId);
+            String key = button.getText().toString();
+            objectToDetect=key;
             setContentView(R.layout.car_view);
 
-            TaskRunner runner = new TaskRunner();
-            runner.executeAsync(new BaseTask() {
-                @Override
-                public Void call() throws Exception {
-                    CarForward();   // in here both forward and steering
-                    FrameProc.setIsCarMoving(true);
-                    return null;
-                }
-            });
-        }
-    }
-
-    public void OnButtonForward2(View view) {
-        if(connection){     //only if the connection with the car is true
-            objectToDetect="monitor";
-            setContentView(R.layout.car_view);
-            TaskRunner runner = new TaskRunner();
-            runner.executeAsync(new BaseTask() {
-                @Override
-                public Void call() throws Exception {
-                    CarForward();   // in here both forward and steering
-                    FrameProc.setIsCarMoving(true);
-                    return null;
-                }
-            });
-        }
-    }
-
-    public void OnButtonForward3(View view) {
-        if(connection){//only if the connection with the car is true
-            objectToDetect="acoustic guitar";
-            setContentView(R.layout.car_view);
             TaskRunner runner = new TaskRunner();
             runner.executeAsync(new BaseTask() {
                 @Override
@@ -118,11 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
                     if (FrontCameraImage != null) {     //it starts when completely loaded
                         FrontCameraImage.setImageBitmap(FrameProc.getFrontImgBitmap());
-                        if(!textInizialization) {
+                        if(!textInitialization) {
                             TextView text = (TextView) findViewById(R.id.textView2);
                             if (text != null) {
                                 text.setText(objectToDetect);
-                                textInizialization=true;
+                                textInitialization=true;
                             }
                         }
                     }

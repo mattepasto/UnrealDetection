@@ -31,29 +31,26 @@
             android:id="@+id/textView2"/>
 
     <Button
-            android:id="@+id/carForward"
+            android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/key1"
-            android:textSize="20dp"
-            android:onClick="OnButtonForward"/>
+            android:textSize="20dp"/>
     <Button
-            android:id="@+id/carForward2"
+            android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/key2"
-            android:textSize="20dp"
-            android:onClick="OnButtonForward2"/>
+            android:textSize="20dp"/>
     <Button
-            android:id="@+id/carForward3"
+            android:id="@+id/button3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:text="@string/key3"
-            android:textSize="20dp"
-            android:onClick="OnButtonForward3"/>
+            android:textSize="20dp"/>
 
 
 </LinearLayout>
