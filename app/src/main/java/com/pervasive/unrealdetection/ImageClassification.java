@@ -48,6 +48,7 @@ public class ImageClassification {
         Imgproc.cvtColor(FrontImgMat, FrontImgMat, Imgproc.COLOR_BGR2RGB);
         if (predictedClass.compareTo(main.getObjectToDetect()) == 0) {
             main.CarFunctions.CarStop();
+            frameP.setIsCarWaiting(true);
         }
         return FrontImgMat;
     }

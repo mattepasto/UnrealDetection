@@ -24,6 +24,7 @@ public class FrameProcessing {
     private static final int w = 256, h = 144;
 
     private static boolean isCarMoving = false;
+    private static boolean isCarWaiting = false;
     private Bitmap FrontImgBitmap;
     private Size size1;
 
@@ -36,9 +37,14 @@ public class FrameProcessing {
         return FrontImgBitmap;
     }
 
+    public Boolean getIsCarMoving() { return isCarMoving; }
+    public Boolean getIsCarWaiting() { return isCarWaiting; }
     public void setIsCarMoving(boolean value) {
-        isCarMoving = true;
+        isCarMoving = value;
     }
+    public void setIsCarWaiting(boolean value) { isCarWaiting = value; }
+
+
 
     private Mat FrontImgMat;
     MainActivity main;

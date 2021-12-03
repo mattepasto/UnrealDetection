@@ -3,10 +3,7 @@ package com.pervasive.unrealdetection;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import org.opencv.android.OpenCVLoader;
@@ -21,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public String objectToDetect;
     private boolean textInitialization = false;   // initialize text in the car_view layout
 
-    static {    //Necessary to load the OpenCv before the OnCreate, without this it doesn't find openCV files and Mat inizialization crashes
+    static {    //Necessary to load the OpenCv before the OnCreate, without this it doesn't find openCV files and Mat initialization crashes
         if (!OpenCVLoader.initDebug()) {
             Log.i("OpenCV", "OpenCV not loaded properly");
         }
@@ -57,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public Void call() throws Exception {
                     CarFunctions.CarForward();   // in here both forward and steering
                     FrameProc.setIsCarMoving(true);
+                    FrameProc.setIsCarWaiting(false);
                     return null;
                 }
             });
@@ -92,4 +90,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void setTextInitialization(boolean value) {textInitialization=value;}
 
     public View getCarView() {return this.findViewById(android.R.id.content).getRootView();}
+
+    public void OnBackClick(View view) {
+        Boolean waitFlag = FrameProc.getIsCarWaiting();
+        if(waitFlag){
+            setContentView(R.layout.activity_main);
+            Button button1 = findViewById(R.id.button1);
+            Button button2 = findViewById(R.id.button2);
+            Button button3 = findViewById(R.id.button3);
+
+            button1.setOnClickListener(this);
+            button2.setOnClickListener(this);
+            button3.setOnClickListener(this);
+            textInitialization = false;
+            FrameProc.setIsCarMoving(false);
+
+            if(connection) {
+                ToggleButton tButton = findViewById(R.id.connectButton);
+                tButton.setChecked(true);
+            }
+        }
+    }
 }
