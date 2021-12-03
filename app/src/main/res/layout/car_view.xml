@@ -16,7 +16,7 @@
             android:layout_marginStart="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="112dp"
-            app:srcCompat="@drawable/macchina"/>
+            app:srcCompat="@drawable/white_wall"/>
     <TextView
             android:text="The element you are searching is:"
             android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_marginTop="72dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="28dp"/>
     <TextView
-            android:text="key"
+            android:text=" "
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/textView2"
             android:textSize="34sp" app:layout_constraintTop_toTopOf="parent"

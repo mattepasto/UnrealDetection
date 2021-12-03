@@ -28,7 +28,7 @@ CarRpcLibClient * m_client;
 Pose NewNavCam_pose;
 Pose NewLeftCam_pose;
 
-JNIEXPORT jboolean JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarConnect(JNIEnv *env, jobject)
+JNIEXPORT jboolean JNICALL Java_com_pervasive_unrealdetection_CarClient_CarConnect(JNIEnv *env, jobject)
 {
     m_client = new CarRpcLibClient("10.0.2.2");
     m_client->confirmConnection();
@@ -37,7 +37,7 @@ JNIEXPORT jboolean JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarCo
     return isEnabled;
 }
 
-JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarForward(JNIEnv *env, jobject)
+JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_CarClient_CarForward(JNIEnv *env, jobject)
 {
     if (!m_client)
         return;
@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarForwar
     m_client->setCarControls(controls);
 }
 
-JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarStop(JNIEnv *env, jobject)
+JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_CarClient_CarStop(JNIEnv *env, jobject)
 {
     if (!m_client)
         return;
@@ -61,7 +61,7 @@ JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_CarStop(J
     m_client->setCarControls(controls);
 }
 
-JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_MainActivity_GetImage(JNIEnv *env, jobject, jlong FrontImg)
+JNIEXPORT void JNICALL Java_com_pervasive_unrealdetection_CarClient_GetImage(JNIEnv *env, jobject, jlong FrontImg)
 {
     // Check if a client has been instantiated
     if (!m_client)

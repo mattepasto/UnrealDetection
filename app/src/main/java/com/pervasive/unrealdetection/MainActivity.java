@@ -12,18 +12,11 @@ import android.os.Bundle;
 import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-    static {
-        System.loadLibrary("carclient");
-    }
-    public native boolean CarConnect();
-    public native void CarForward();
-    public native void CarStop();
-    public native void GetImage(long FrontImg);
 
+    public CarClient CarFunctions;
     private FrameProcessing FrameProc;
-
+    private FrameLoop FrameLo;
     private Boolean connection=false;
-    private ImageView FrontCameraImage;
 
     public String objectToDetect;
     private boolean textInitialization = false;   // initialize text in the car_view layout
@@ -45,7 +38,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
 
+        CarFunctions = new CarClient();
         FrameProc = new FrameProcessing(this);
+        FrameLo = new FrameLoop(this, FrameProc);
     }
     @Override
     public void onClick(View view) {
@@ -60,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             runner.executeAsync(new BaseTask() {
                 @Override
                 public Void call() throws Exception {
-                    CarForward();   // in here both forward and steering
+                    CarFunctions.CarForward();   // in here both forward and steering
                     FrameProc.setIsCarMoving(true);
                     return null;
                 }
@@ -73,14 +68,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runner.executeAsync(new CustomCallable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return CarConnect();
+                return CarFunctions.CarConnect();
             }
             @Override
             public void postExecute(Boolean result) {
                 Toast.makeText(getApplicationContext(),
                         "connection result " + result, Toast.LENGTH_LONG).show();
                 connection=result;
-                Loop();
+                FrameLo.Loop();
             }
             @Override
             public void preExecute() {
@@ -88,31 +83,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void Loop(){
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            public void run() {
-                if (connection) {
-                    FrameProc.getFramesBitmap();    //obtained Mat from camera.
-                    FrontCameraImage = (ImageView) findViewById(R.id.frontCamera);
+    public String getObjectToDetect(){return objectToDetect;}
 
-                    if (FrontCameraImage != null) {     //it starts when completely loaded
-                        FrontCameraImage.setImageBitmap(FrameProc.getFrontImgBitmap());
-                        if(!textInitialization) {
-                            TextView text = (TextView) findViewById(R.id.textView2);
-                            if (text != null) {
-                                text.setText(objectToDetect);
-                                textInitialization=true;
-                            }
-                        }
-                    }
-                    handler.postDelayed(this, 1);
-                }
-            }
-        }, 1);
-    }
+    public boolean getConnection() {return connection;}
 
-    public String getObjectToDetect(){
-        return objectToDetect;
-    }
+    public boolean getTextInitialization() {return textInitialization;}
+
+    public void setTextInitialization(boolean value) {textInitialization=value;}
+
+    public View getCarView() {return this.findViewById(android.R.id.content).getRootView();}
 }
