@@ -5,4 +5,5 @@
     <string name="key1">basketball</string>
     <string name="key2">monitor</string>
     <string name="key3">acoustic guitar</string>
+    <string name="back_txt">Back</string>
 </resources>
